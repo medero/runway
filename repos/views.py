@@ -35,10 +35,7 @@ def findRepo(site_name, branch):
 
 def Deploy(repo):
     directory = repo.directory
-    directory = '/home/meder/bla/'
     repo = Repo(directory)
     repo.git.reset('--hard HEAD')
-    #repo.git.
-    #call(["git", "reset", "--hard", "HEAD", ">output.log"])
-    #call(["git", "pull", repo.remote, repo.branch, "2>&1"])
-    #call(["chmod", "-R", "og-rx", ".git"])
+    repo.git.remotes[repo.remote].pull()
+    call(['chmod', '-R', 'og-rx', '.git'])
