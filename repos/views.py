@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Repo, Site
+from .models import Repo, Site, Log
 import os
-from subprocess import call
-from git import Repo
+import subprocess
+#from subprocess import call
+import git
 
 # Create your views here.
 
@@ -35,7 +36,21 @@ def findRepo(site_name, branch):
 
 def Deploy(repo):
     directory = repo.directory
-    repo = Repo(directory)
-    repo.git.reset('--hard HEAD')
-    repo.git.remotes[repo.remote].pull()
-    call(['chmod', '-R', 'og-rx', '.git'])
+    #r = git.Repo(directory)
+    os.chdir(directory)
+
+    output = ''
+    output += subprocess.check_output(["git", "reset", '--hard', 'HEAD'])
+    output += subprocess.check_output(["git", "pull", repo.remote, repo.branch])
+    output += subprocess.check_output(['chmod', '-R', 'og-rx', '.git'])
+    output += 'directory: ' + directory + ', site_name=' + repo.site_id.name
+    x = Log(log_text=output, repo=repo)
+    x.save()
+
+    #if r:
+        #r.git.reset('--hard')
+        #if r.remotes[repo.remote]:
+            #r.remotes[repo.remote].pull()
+            #call(['chmod', '-R', 'og-rx', '.git'])
+            #x = Log(log_text='Successfully pulled.', repo=repo)
+            #x.save()

@@ -38,3 +38,9 @@ class DeploymentScript(models.Model):
 
     def __str__(self):
         return self.name
+
+class Log(models.Model):
+    log_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    repo = models.ForeignKey('Repo')
